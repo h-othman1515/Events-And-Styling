@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Task Dashboard</title>
+    <style>
+        .hidden {
+            display: none !important;
+        }
+
+        /* General Layout */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        /* Task Card Containers */
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .task-card h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: #555;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .row,
+        .counter-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        /* Buttons & Inputs */
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            flex-grow: 1;
+        }
+
+        /* Task 3: List Styling */
+        #list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        #list li {
+            background: #f9f9f9;
+            margin-bottom: 5px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .del-btn {
+            background-color: #ff4757;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+
+        .del-btn:hover {
+            background-color: #e84118;
+        }
+
+        /* Task 4: Color Cards */
+        #Colors-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .color {
+            height: 60px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            background: white;
+            transition: transform 0.1s;
+        }
+
+        .color:hover {
+            transform: scale(1.05);
+        }
+
+        /* Task 5: Visibility Section */
+        #section {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        /* Task 6: Counter Dynamics */
+        #number {
+            font-size: 2rem;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .positive {
+            color: #2ecc71;
+        }
+
+        .negative {
+            color: #e74c3c;
+        }
+
+        .zero {
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Interactive JS Dashboard</h1>
+    <div class="task-card">
+        <h2>Task 1 — Smart Button</h2>
+        <button id="smart-btn">Unclicked</button>
+    </div>
+
+    <div class="task-card">
+        <h2>Task 2 — Live Preview</h2>
+        <input type="text" id="input" placeholder="Type something" />
+        <p id="preview">Waiting for input</p>
+    </div>
+
+    <div class="task-card">
+        <h2>Task 3 — Interactive List</h2>
+        <div class="row">
+            <input type="text" id="list-input" placeholder="New item" />
+            <button id="add-btn">Add</button>
+        </div>
+        <ul id="list"></ul>
+    </div>
+
+    <div class="task-card">
+        <h2>Task 4 — Color Cards</h2>
+        <div id="Colors-container">
+            <div class="color" data-color="#7c6aff">#1</div>
+            <div class="color" data-color="#3ecfcf">#2</div>
+            <div class="color" data-color="#ffd166">#3</div>
+            <div class="color" data-color="#ff5f72">#4</div>
+            <div class="color" data-color="#3ecf8e">#5</div>
+            <div class="color" data-color="#ff9f43">#6</div>
+        </div>
+    </div>
+
+    <div class="task-card">
+        <h2>Task 5 — Visibility</h2>
+        <div class="row">
+            <button id="btn-classlist">ClassList Toggle</button>
+            <button id="btn-display">Style Display</button>
+        </div>
+        <div id="section">Toggle Visibile!</div>
+    </div>
+
+    <div class="task-card">
+        <h2>Task 6 — Counter</h2>
+        <div class="counter-row">
+            <button id="minus-btn">−</button>
+            <span id="number">0</span>
+            <button id="plus-btn">+</button>
+        </div>
+    </div>
+
+    <script>
+        // ============== Task 1 ==============
+        const smart = document.getElementById("smart-btn");
+        smart.addEventListener("click", function () {
+            if (smart.textContent === "Unclicked") {
+                smart.textContent = "Clicked!";
+            } else {
+                smart.textContent = "Unclicked";
+            }
+        });
+
+        // ============== Task 2 ==============
+        const input = document.getElementById("input");
+        const preview = document.getElementById("preview");
+
+        input.addEventListener("input", function (event) {
+            preview.textContent = event.target.value;
+        });
+
+        // ============== Task 3 ==============
+        const Input_list = document.getElementById("list-input");
+        const addBtn = document.getElementById("add-btn");
+        const list = document.getElementById("list");
+
+        addBtn.addEventListener("click", function () {
+            const li = document.createElement("li");
+            li.textContent = Input_list.value;
+
+            const delBtn = document.createElement("button");
+            delBtn.textContent = "Delete";
+            delBtn.classList.add("del-btn");
+
+            li.appendChild(delBtn);
+            list.appendChild(li);
+
+            Input_list.value = "";
+        });
+
+        list.addEventListener("click", function (event) {
+            if (event.target.classList.contains("del-btn")) {
+                event.target.parentElement.remove();
+            }
+        });
+
+        // ============== Task 4 ==============
+        const container = document.getElementById("Colors-container");
+        const colors = document.querySelectorAll(".color");
+
+        container.addEventListener("click", function (event) {
+            if (event.target.classList.contains("color")) {
+                for (let i = 0; i < colors.length; i++) {
+                    colors[i].style.background = "white";
+                }
+                event.target.style.background = event.target.dataset.color;
+            }
+        });
+
+        // ============== Task 5 ==============
+        const section = document.getElementById("section");
+        const btnClasslist = document.getElementById("btn-classlist");
+        const btnDisplay = document.getElementById("btn-display");
+
+        // ----- Way 1: classList.toggle -----
+        btnClasslist.addEventListener("click", function () {
+            section.classList.toggle("hidden");
+        });
+
+        // ----- Way 2: style.display -----
+        btnDisplay.addEventListener("click", function () {
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        });
+        // ============== Task 6 ==============
+        const minusBtn = document.getElementById("minus-btn");
+        const plusBtn = document.getElementById("plus-btn");
+        const number = document.getElementById("number");
+
+        var count = 0;
+        function updateDisplay() {
+            // showout the number
+            number.textContent = count;
+
+            // add the right one
+            if (count > 0) {
+                number.classList.add("positive");
+            } else if (count < 0) {
+                number.classList.add("negative");
+            } else {
+                number.classList.add("zero");
+            }
+        }
+
+        minusBtn.addEventListener("click", function () {
+            count--;
+            updateDisplay();
+        });
+
+        plusBtn.addEventListener("click", function () {
+            count++;
+            updateDisplay();
+        });
+
+    </script>
+</body>
+
+</html>
